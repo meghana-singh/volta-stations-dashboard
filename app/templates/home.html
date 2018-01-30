@@ -1,0 +1,52 @@
+<div class="container">
+<!--  <h4 class="text-center"><strong> ID - {{home.id}}</strong></h4>-->
+<!--    <button class="pull-right btn btn-default" ng-click="home.taskHidden.length=null">View Hidden Tasks</button>-->
+  <div class="row">
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center"></div>
+      <h4> Enter the City name where you want to locate the Volta Charging Station </h4>
+      <input type="text" ng-model="home.originCity" placeholder="Enter city name"> <span class="glyphicon glyphicon-search" ng-click="home.getSites()" > </span> 
+    </div>
+  </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">Name Of Charging Site</th>
+          <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">No. Of Charging Stations Available</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Distance (kms)</th>
+          <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">Address</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Parking Fee</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
+              <div ng-repeat="sites in home.siteInfoToDisplay"> <!--ng-class-odd="'odd'" ng-class-even="'even'" >-->
+	                         {{sites.name}} 
+	      </div>
+	    </td>  
+            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+              <div ng-repeat="sites in home.siteInfoToDisplay"> 
+	                         {{sites.noOfChargers === undefined ? "Info not available" : sites.noOfChargers}} 
+	      </div>
+            </td>
+            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
+              <div ng-repeat="sites in home.siteInfoToDisplay"> 
+	                         {{sites.distance}} 
+	      </div>
+            </td>
+             <td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
+              <div ng-repeat="sites in home.siteInfoToDisplay">
+	                         {{sites.address}} 
+	      </div>
+            </td>
+             <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+              <div ng-repeat="sites in home.siteInfoToDisplay">
+	                         {{sites.parkingFee == true ? "Paid" : "Free"}} 
+	      </div>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
