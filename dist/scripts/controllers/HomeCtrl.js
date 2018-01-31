@@ -1,31 +1,48 @@
-//Define the Controller for Home Page in the chat room.
-//This Controller is constructed for bloc Chats.
-//It currently has one dependency injected into its dependency array - . The callback function is always the last item in the array.
-//The callback function of the controller is HomeCtrl
+//-----------------------------------------------------------------------------------------------------------
+//Define the Controller for Home Page in the Volta stations dashboard app.
+//It currently has one dependency injected into its dependency array - VoltaApis
+//Its an interface between the model - (interface with Voltas api and google distance matrix api)
+//and between the view template - displays meaningful data of volta sites based upon the users search city
+//-----------------------------------------------------------------------------------------------------------
 (function(){
     function HomeCtrl ($scope, VoltaApis) {
       
       var that = this;
-      this.sitesList = [];
-      this.addressOfDestinations = [];
-      this.cityOfDest = [];
-      this.sitesListByDist = [];
-      this.siteInfoToDisplay = [];
-      this.originCity = "san jose";
-      this.errorMsg = "";
+      this.sitesInSelectedCity = null
+      this.addressOfSites = null
+      this.sitesDistanceDuration = null
+      this.siteInfoToDisplay = null
+      this.originCity = null;
+      this.errorMsg = null;
       var args = {};
 
+ /**
+ * @function : getSites
+ * @desc     : This function makes a call to Volta public-site using the service VoltaApis.getSites.
+ *           : The data returned from this service is the entire list of volta sites.
+ *           : This data is then filtered for sites as per the user's search city. 
+ *           : Then based on the sites in the selected city, the address of those sites is passed
+ *           : to Google distance matrix so as to get the details for travel time.
+ *           : Once the travel time details for each site is returned by the service VoltaApis.getDistance, 
+ *           : a consolidated list of sites with the below information is saved for display.
+ *           : 
+ *           : The list of sites is displayed in the order of shortest travel distance to longest distance.
+ *           : city, name, address, no of charging stations, distance, travel time and parking fee.
+ *           : 
+ * @param    : none
+ * @return   : none
+ **/
+ 
       this.getSites = function () {
           VoltaApis.getSites().then(function(response){
-            that.sitesList = response.data;	
             
-            that.addressOfDestinations   = that.sitesList.map(function(site) {
+            that.sitesInSelectedCity   = response.data.map(function(site) {
 	         var address = "" + site.street_address + " " + site.city + " " + site.state + " " + site.zip_code + "";
 	         return {
 		   city: site.city, 
 		   address: address,
 		   name: site.name,
-		   noOfCharges: site.chargers.total,
+		   noOfCharges: site.stations.length,
 		   parkingFeee: site.pay_to_park
 		 };
 	    })
@@ -35,63 +52,45 @@
 	      }
 	    });
 
-	    console.log("addressOfDestinations: ", that.addressOfDestinations);
-/*
-	    that.cityOfDest = that.addressOfDestinations
-	    
-	    .map(function(cityAndAddress) { 
-              //console.log("address: ", cityAndAddress.address);
-              if (cityAndAddress.city.toLowerCase() == that.originCity.toLowerCase()) {
-	        console.log("entered the if");
-                return cityAndAddress.address;
-	      }
-	    })
-	    .filter(function(address) {
-	      if(address !== undefined) {
-                return true;
-	      }
-	    });
-*/
-        
-	    that.addressOfDestinations.forEach(function (siteInfo) {
-	      that.cityOfDest.push(siteInfo.address);
+            that.addressOfSites = new Array(); 
+	    that.sitesInSelectedCity.forEach(function (siteInfo) {
+	      that.addressOfSites.push(siteInfo.address);
 	    }); 
 
-            console.log("cityOfDest: ", that.cityOfDest);
             
-            args["destinations"] = that.cityOfDest;
+            args["destinations"] = that.addressOfSites;
             args["origins"] = [that.originCity];
             
-	    if (that.cityOfDest.length > 0 ) {
+	    if (that.addressOfSites.length > 0 ) {
+	      that.errorMsg = null;
        
               that.getDistance = VoltaApis.getDistance(args, function(distanceList) {
-                that.sitesListByDist = distanceList;
-                console.log(that.sitesListByDist);
-                //console.log("adress of returned list:", that.sitesListByDist[0].address);
-                that.siteInfoToDisplay = that.addressOfDestinations.filter(function(sites){
-          	for (var i=0; i< that.sitesListByDist.length; i++) {
-          	  //console.log("sites[address]", sites["address"]);
-          	  //console.log("address: ", that.sitesListByDist[i].address);
+                that.sitesDistanceDuration = distanceList;
+
+                that.siteInfoToDisplay = that.sitesInSelectedCity.filter(function(sites){
+          	  for (var i=0; i< that.sitesDistanceDuration.length; i++) {
   
-                    if (sites["address"] == that.sitesListByDist[i].address) {
-          	    //console.log("entered if", sites.address);
-                      sites.distance = that.sitesListByDist[i].distance/1000;
-          	    //console.log(that.addressOfDestinations[i]);
+                    if (sites["address"] == that.sitesDistanceDuration[i].address) {
+                      sites.distance = (that.sitesDistanceDuration[i].distance/1609.344).toFixed(3);
+                      sites.duration = that.sitesDistanceDuration[i].duration;
                       return true;
                     }
-          	}
+          	  }  
                 });
+
+                //sort the sites based upon the distance - shortest to farthest.
                 that.siteInfoToDisplay.sort( function (a, b) {return a.distance - b.distance;});
+		$scope.$apply();
                 console.log("Final Dest Sites", that.siteInfoToDisplay );
   
               });
 	    } else {
-	      that.errorMsg = "Sorry! There are no Volta Stations in the city!"
+	      that.errorMsg = "Sorry! There are no Volta Stations in " + that.originCity + " yet!"
 	    }
 
        
         }, function (error) {
-          console.log("Oops!! ", error);
+	   that.errorMsg = "Oops!! " + error;
         }); 
        
       };

@@ -2,6 +2,7 @@
   function VoltaApis($http) {
 
       var VoltaApis = {};
+
       var service = new google.maps.DistanceMatrixService();
       var listOfDist = [];
       
@@ -37,15 +38,13 @@
       };
  /**
  * @function : getDistance
- * @desc     : This function returns a list containing the distance of Volta charging sites from the users specified location in
- *           : ascending order.
+ * @desc     : This function returns a list containing the distance of Volta charging sites from the users specified location.
+ *           : 
  *           : 
  * @param    : {args} - Object with lists of origins and destination zip codes.
  * @return   : {object} List of objects with zipcode (key) : distance (value)
  **/
       VoltaApis.getDistance = function (args, callback) {
-        //console.log(args.origins);
-        //console.log(args.destinations);
         service.getDistanceMatrix(
         {
           origins: args.origins,
@@ -54,26 +53,27 @@
 	}, extractDist);
 
         function extractDist(response, status) {
-	  console.log("entered extractDist", status);
+	  
           if (status == 'OK') {
-              //console.log("args ", args.destinations);
 	      
 	      var origins = response.originAddresses;
 	      var destinations = response.destinationAddresses;
 	      var results = response.rows[0].elements;
+
  	        for (var j = 0; j < results.length; j++) {
     	           var element = results[j];
-	           var distance = element.distance.value;
-	           var duration = element.duration.value;
-                   listOfDist.push({distance: distance, address: args.destinations[j]}); 		   
-		   //console.log("Destination Distance: ", listOfDist[j].distance);
-		   //console.log("Destination: ", listOfDist[j].address);
+		   if (element.status == 'OK') { //The Volta public site have some invalid address
+	             var distance = element.distance.value;
+	             var duration = element.duration.text;
+                     listOfDist.push({distance: distance, duration: duration, address: args.destinations[j]}); 		   
+		   } else {
+                     listOfDist.push({distance: 0, duration: 0, address: args.destinations[j]}); 		   
+		   }
 	        }   
 	  }   
 	   callback(listOfDist);
         };  
       } 
-
 
       return VoltaApis;    
       

@@ -1,5 +1,5 @@
-## List all the Volta Stations and make them searchable 
-
+##Volta Charging Stations Locator
+Locates all the Volta Charging stations in the User's search city and displays them in the order of shortest to farthest distance.
 ## Configuration
 
 $ git clone https://github.com/meghana-singh/volta-stations-dashboard.git <your-frontend-project-name>
@@ -53,10 +53,19 @@ app.js
   only one view template is used here - home.html
 * All the external dependecies are injected into the voltaStationsDashboard Module here - Bootstrap and UI Router.
 
+VoltaApis.js
+* This service has logic to make API calls to Volta & API call to Google Distance matrix.
+
 HomeCtrl.js
-* Controller contains logic to make API call to Volta and functions that control the display of stations.
+* Home controller has the logic to call the api services to read data from public-sites, filter them based on the User's seatch city and pass the address of the Volta sites to Google distance matrix inorder to get the distance of these sites from the city center. Finally sort the sites in the order of shortest distance to farthest. 
+
 
 Home.html
-* The home template for viewing the list of stations. 
+* The home template is the html doc which displays useful information to the User based on his/her seach city.
+
+|Distance (miles)	|Travel Time|	Location	|City	|Address	|Parking	|No of Charging Stations|
+|-----------------------|-----------|-------------------|-------|---------------|---------------|-----------------------|
+|1.325                  |7mins      |Volta De Haro HQ   | SF    | 155 De Haro   | Free Parking  |  2                    |
+
 
 

@@ -8,7 +8,9 @@
     //$locationProvide: Configures the applications path
     //$stateProvider: Configures the states name, URL route, controller and template.
 
-    //Controllers are instantiated on an as-needed basis, when their corresponding scopes are created, i.e. when the user manually navigates to a //state via a URL, $stateProvider will load the correct template into the view, then bind the controller to the template's scope.
+    //Controllers are instantiated on an as-needed basis, when their corresponding scopes are created, 
+    //i.e. when the user manually navigates to a //state via a URL, $stateProvider will load the correct template into the view, 
+    //then bind the controller to the template's scope.
 
     function config($stateProvider, $locationProvider) {
 
@@ -23,13 +25,7 @@
                  url: '/',
                  controller: 'HomeCtrl as home',
                  templateUrl: 'templates/home.html'
-            });/*
-	    .state("welcome", {
-              url:'/',
-              controller: 'WelcomeCtrl as welcome',
-              templateUrl: 'templates/welcome.html',
-           });*/
-    }
+            });    }
 
    //Below we are setting default headers at run time using $http.defaults object.
 
@@ -41,7 +37,6 @@
     //Adding the below dependencies into our application - UI Router module, UI Bootstrapp
     angular
         .module('voltaStationsDashboard', ['ui.router', 'ui.bootstrap']) 
-        //.module('voltaStationsDashboard', ['ui.router', 'ui.bootstrap', 'angular-google-map', 'angular.google.distance']) 
         .config(config)
         .run(['$http', setCommonHeader]);
 
