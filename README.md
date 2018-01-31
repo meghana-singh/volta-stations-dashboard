@@ -1,4 +1,4 @@
-##Volta Charging Stations Locator
+## Volta Charging Stations Locator
 
 Locates all the Volta Charging stations in the User's search city and displays them in the order of nearest to farthest.
 
