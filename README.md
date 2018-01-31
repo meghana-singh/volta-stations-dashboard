@@ -36,7 +36,9 @@ The default task runs a simple server on port 3000. To view it in a any browser,
 │   │   └── app.js
 │   │   └── controllers
 │   │       └── HomeCtrl.js
-│   │   └── controllers
+│   │   └── service
+│   │       └── VoltaApis.js
+|   |          
 │   ├── styles
 │   │   └── style.css
 │   └── templates
