@@ -1,5 +1,7 @@
 ##Volta Charging Stations Locator
-Locates all the Volta Charging stations in the User's search city and displays them in the order of shortest to farthest distance.
+
+Locates all the Volta Charging stations in the User's search city and displays them in the order of nearest to farthest.
+
 ## Configuration
 
 $ git clone https://github.com/meghana-singh/volta-stations-dashboard.git <your-frontend-project-name>
