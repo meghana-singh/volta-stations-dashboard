@@ -11,8 +11,8 @@
  * @desc     : This function returns a list containing the distance of Volta charging sites from the users specified location.
  *           : 
  *           : 
- * @param    : {args} - Object with lists of origins and destination zip codes.
- * @return   : {object} List of objects with zipcode (key) : distance (value)
+ * @param    : {args} - Object with lists of origins and destination address.
+ * @return   : {object} List of objects with address, distance and duration details.
  **/
       GoogleApis.getDistance = function (args, callback) {
         service.getDistanceMatrix(
