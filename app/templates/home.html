@@ -20,7 +20,9 @@
       <thead>
       <h3 class="text-center"><strong>Volta Charging Stations near you</strong></h3>
       <div class="form-group col-xs-2 col-sm-2 col-md-2 col-lg-2">
-	    Sort <select class="form-control" ng-model="home.sortBy" ng-options="criteria for criteria in home.stationCriterias" ng-change="home.sortArray()"></select>
+	    Sort by <select class="form-control" ng-model="home.sortBy" ng-options="criteria for criteria in home.stationCriterias" ng-change="home.sortArray()">
+	    <option value="" selected disabled >Select here</option>
+	    </select>
       </div>
         <tr>
           <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Distance (miles)</th>
