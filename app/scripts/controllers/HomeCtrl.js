@@ -5,7 +5,7 @@
 //and between the view template - displays meaningful data of volta sites based upon the users search city
 //-----------------------------------------------------------------------------------------------------------
 (function(){
-    function HomeCtrl ($scope, VoltaApis) {
+    function HomeCtrl ($scope, VoltaApis, GoogleApis) {
       
       var that = this;
       this.sitesInSelectedCity = null
@@ -14,6 +14,8 @@
       this.siteInfoToDisplay = null
       this.originCity = null;
       this.errorMsg = null;
+
+      this.stationCriterias = ["Distance", "Travel Time", "Free Parking", "No Of Charging Stations"];
       var args = {};
 
  /**
@@ -42,8 +44,8 @@
 		   city: site.city, 
 		   address: address,
 		   name: site.name,
-		   noOfCharges: site.stations.length,
-		   parkingFeee: site.pay_to_park
+		   noOfChargers: site.stations.length,
+		   parkingFee: site.pay_to_park == true ? "Paid parking" : "Free parking"
 		 };
 	    })
 	    .filter(function(siteInfo) {
@@ -64,7 +66,7 @@
 	    if (that.addressOfSites.length > 0 ) {
 	      that.errorMsg = null;
        
-              that.getDistance = VoltaApis.getDistance(args, function(distanceList) {
+              that.getDistance = GoogleApis.getDistance(args, function(distanceList) {
                 that.sitesDistanceDuration = distanceList;
 
                 that.siteInfoToDisplay = that.sitesInSelectedCity.filter(function(sites){
@@ -94,9 +96,49 @@
         }); 
        
       };
+
+      this.sortArray = function () {
+	console.log("entered sortArray - ", this.sortBy);
+        var sortCriteria = this.sortBy;
+
+
+        //In order to test sorting of paid/free parking, make some stations paid since by default the public-sites in volta have free parking.
+	for(var i=0; i<=2; i++) {
+	  that.siteInfoToDisplay[i].parkingFee = "Paid parking";
+	}
+
+        switch (sortCriteria) {
+	  case "Distance":
+                //sort the sites based upon the distance - shortest to farthest.
+                that.siteInfoToDisplay.sort( function (a, b) {return a.distance - b.distance;});
+		break;
+	    
+	  case "Travel Time":
+                //sort the sites based upon the travel time - fastest to slowest.
+                that.siteInfoToDisplay.sort( function (a, b) {return a.distance - b.distance;});
+		break;
+
+	  case "No Of Charging Stations" :
+                //sort the sites based upon number of chargers in the site - max to min
+                that.siteInfoToDisplay.sort( function (a, b) {return b.noOfChargers - a.noOfChargers;});
+		console.log("sorted by noOfChargers: ", that.siteInfoToDisplay);
+		break;
+
+	  case "Free Parking":
+                //sort the sites based upon parking fee - free to charged
+		
+                that.siteInfoToDisplay.sort( function (a, b) {
+		  var parkingFeeA = a.parkingFee.toLowerCase();
+		  var parkingFeeB = b.parkingFee.toLowerCase();
+		    return (parkingFeeA < parkingFeeB) ? -1 : (parkingFeeA > parkingFeeB) ? 1 : 0;
+		});
+		break;
+
+	}
+      };
 }
 
     angular
     .module('voltaStationsDashboard')
-    .controller('HomeCtrl', ['$scope', 'VoltaApis', HomeCtrl]);
+    .controller('HomeCtrl', ['$scope', 'VoltaApis', 'GoogleApis', HomeCtrl]);
 })();
