@@ -4,12 +4,12 @@
 
       <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
         <div>
-        <form ng-submit="home.getSites()" class="space-btm">
-          <input type="text" ng-model="home.originCity" placeholder="Enter city name for search" class="form-control form-control-success">
+        <form ng-submit="home.stationDetails.getSites()" class="space-btm">
+          <input type="text" ng-model="home.stationDetails.originCity" placeholder="Enter city name for search" class="form-control form-control-success">
         </form>	
         </div>
-        <div class="alert alert-warning space" ng-if="home.errorMsg">
-	  {{ home.errorMsg }}
+        <div class="alert alert-warning space" ng-if="home.stationDetails.errorMsg">
+	  {{ home.stationDetails.errorMsg }}
 	</div>
 
       </div>
@@ -20,7 +20,7 @@
       <thead>
       <h3 class="text-center"><strong>Volta Charging Stations near you</strong></h3>
       <div class="form-group col-xs-2 col-sm-2 col-md-2 col-lg-2">
-	    Sort by <select class="form-control" ng-model="home.sortBy" ng-options="criteria for criteria in home.stationCriterias" ng-change="home.sortArray()">
+	    Sort by <select class="form-control" ng-model="home.stationDetails.sortBy" ng-options="criteria for criteria in home.stationDetails.stationCriterias" ng-change="home.stationDetails.sortArray()">
 	    <option value="" selected disabled >Select here</option>
 	    </select>
       </div>
@@ -35,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="text-center" ng-repeat="sites in home.siteInfoToDisplay"> 
+        <tr class="text-center" ng-repeat="sites in home.stationDetails.sitesInSelectedCity"> 
             <td> {{sites.distance}} </td>
             <td> {{sites.duration}} </td>
             <td> {{sites.name}} </td>
