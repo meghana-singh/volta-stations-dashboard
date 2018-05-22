@@ -4,12 +4,12 @@
 
       <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
         <div>
-        <form ng-submit="home.getSites()" class="space-btm">
-          <input type="text" ng-model="home.originCity" placeholder="Enter city name for search" class="form-control form-control-success">
+        <form ng-submit="home.stationDetails.getSites()" class="space-btm">
+          <input type="text" ng-model="home.stationDetails.originCity" placeholder="Enter city name for search" class="form-control form-control-success">
         </form>	
         </div>
-        <div class="alert alert-warning space" ng-if="home.errorMsg">
-	  {{ home.errorMsg }}
+        <div class="alert alert-warning space" ng-if="home.stationDetails.errorMsg">
+	  {{ home.stationDetails.errorMsg }}
 	</div>
 
       </div>
@@ -19,53 +19,30 @@
     <table class="table table-striped">
       <thead>
       <h3 class="text-center"><strong>Volta Charging Stations near you</strong></h3>
+      <div class="form-group col-xs-2 col-sm-2 col-md-2 col-lg-2">
+	    Sort by <select class="form-control" ng-model="home.stationDetails.sortBy" ng-options="criteria for criteria in home.stationDetails.stationCriterias" ng-change="home.stationDetails.sortArray()">
+	    <option value="" selected disabled >Select here</option>
+	    </select>
+      </div>
         <tr>
           <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Distance (miles)</th>
           <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">Travel Time</th>
           <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">Location</th>
-          <th class="col-xs-1 col-sm-2 col-md-2 col-lg-2 text-center">City</th>
-          <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">Address</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">City</th>
+          <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">Address</th>
           <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">Parking</th>
-          <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">No of Charging Stations</th>
+          <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">No of Charging Stations</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay"> 
-	                         {{sites.distance}} 
-	      </div>
-            </td>
-            <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay"> 
-	                         {{sites.duration}} 
-	      </div>
-            </td>
- 
-            <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay"> <!--ng-class-odd="'odd'" ng-class-even="'even'" >-->
-	                         {{sites.name}} 
-	      </div>
-            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay"> <!--ng-class-odd="'odd'" ng-class-even="'even'" >-->
-	                         {{sites.city}} 
-	      </div>
-	    </td>  
-            <td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay">
-	                         {{sites.address}} 
-	      </div>
-            </td>
-           <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay">
-	                         {{sites.parkingFee == true ? "Paid parking" : "Free parking"}} 
-	      </div>
-            </td>
-            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
-              <div ng-repeat="sites in home.siteInfoToDisplay"> 
-	                         {{sites.noOfCharges}} 
-	      </div>
-            </td>
+        <tr class="text-center" ng-repeat="sites in home.stationDetails.sitesInSelectedCity"> 
+            <td> {{sites.distance}} </td>
+            <td> {{sites.duration}} </td>
+            <td> {{sites.name}} </td>
+	    <td> {{sites.city}} </td>
+            <td> {{sites.address}} </td>
+            <td> {{sites.parkingFee}} </td>
+            <td> {{sites.noOfChargers}} </td>
         </tr>
       </tbody>
     </table>

@@ -13,14 +13,14 @@
     //then bind the controller to the template's scope.
 
     function config($stateProvider, $locationProvider) {
-
-         $locationProvider
+         //Providers are services that are used to define the default behaviour of our angular module.
+         $locationProvider //To configure how applications handle urls in the browser
              .html5Mode({
                  enabled: true, //!# display is disabled in the URL
                  requireBase: false
              });
 
-         $stateProvider
+         $stateProvider //To configure the state behaviour
              .state('home', {
                  url: '/',
                  controller: 'HomeCtrl as home',
